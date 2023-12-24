@@ -39,4 +39,51 @@ a
 n.TESTNAME = dat1 %$% TESTNAME %>% factor %>% levels %>% length
 n.TESTNAME
 
+#增加程式可讀性(4)
+#學習特殊運算符號的目標除了是增加自己程式的可讀性之外，更重要的是會增加及執行速度！
+#讓我們看看結合了眾多改變後，再回頭看看第五課的練習一這個任務要花多久：
+t0 = Sys.time
+dat1$COLLECTIONDATE = dat1[,3] %>% as.Date
+levels.TESTNAME = dat1[,4] %>% factor %>% levels
+n.TESTNAME = levels.TESTNAME %>% length
+levels.PATNUMBER = dat1[,1] %>% factor %>% levels
+n.PATNUMBER = levels.PATNUMBER %>% length
+
+dat_list = list()
+
+for (i in 1:n.PATNUMBER) {
+  
+  subdat = dat1[dat1[,1]==levels.PATNUMBER[i],]
+  levels.COLLECTIONDATE = subdat[,3] %>% factor %>% levels
+  n.COLLECTIONDATE = levels.COLLECTIONDATE %>% length
+  
+  submatrix = matrix(NA, nrow = n.COLLECTIONDATE, ncol = n.TESTNAME + 2)
+  colnames(submatrix) = c("PATNUMBER", "COLLECTIONDATE", levels.TESTNAME)
+  
+  submatrix[,1] = levels.PATNUMBER[i]
+  submatrix[,2] = levels.COLLECTIONDATE
+  
+  for (j in 1:n.COLLECTIONDATE) {
+    subsubdat = subdat[subdat[,3]==levels.COLLECTIONDATE[j],]
+    for (k in 1:nrow(subsubdat)) {
+      NAME = subsubdat[k,4]
+      position = which(NAME == levels.TESTNAME) + 2
+      submatrix[j, position] = subsubdat[k,5]
+    }
+  }
+  
+  dat_list[[i]] = submatrix
+}
+
+final.data = do.call("rbind", dat_list)
+
+Sys.time() - t0
+
+head(final.data)
+
+#居然2分多鐘就做完了，配上讀取/寫出檔案的時間加起來也不超過2分半，看來大檔案的處理也並不怎麼可怕！
+final.data = as.data.frame(final.data, stringsAsFactors = FALSE)
+
+fwrite(final.data, 'final_data.csv', row.names = FALSE, quote = TRUE)
+
 
