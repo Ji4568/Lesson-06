@@ -58,4 +58,15 @@ t0 = Sys.time()
 fwrite(dat2, 'data3_4(2).csv', row.names = FALSE, quote = TRUE)
 Sys.time() - t0
 
+#快速讀寫檔案(7)
+
+#另外還有一種儲存、載入物件的方式，使用R內建的「save」與「load」函數甚至可以完全保留物件原有的所有屬性，並且能夠把任何物件存出，也具有較小的儲存空間：
+#這是儲存
+t0 = Sys.time()
+save(dat1, file = 'data3_4.RData')
+Sys.time() - t0
+#這是載入
+t0 = Sys.time()
+load('data3_4.RData')
+Sys.time() - t0
 
