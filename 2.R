@@ -29,4 +29,14 @@ f = function(x, a, b) {a*x^2 + b}
 
 1:5 %>% f(2, 5, .)
 
+#增加程式可讀性(3)
+#我們再多介紹幾個特殊的運算符號(這兩個比較不常用)：
+#「%<>%」：不要顯示結果，而是改變物件內容
+a = 1
+a %<>% add(1)
+a
+#「%$%」：指定物件內的索引格式
+n.TESTNAME = dat1 %$% TESTNAME %>% factor %>% levels %>% length
+n.TESTNAME
+
 
