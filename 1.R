@@ -10,6 +10,19 @@ install.packages("data.table")
 #安裝完成後，未來我們要使用這個套件只要打上這串指令：
 library(data.table)
 
+#快速讀寫檔案(3)
+#讓我們來體驗一下data.table套件內一個神奇的函數：「fread」，它可以以數倍的速度讀取一個csv檔案：
+#至於大Data在哪，我們可以使用第五節課用到的大檔案，請在這裡下載。
+#這是使用「read.csv」讀取的速度：
+t0 = Sys.time()
+dat1 = read.csv('data3_4.csv', header = TRUE, fileEncoding = 'CP950')
+Sys.time() - t0
+
+#這是使用「fread」讀取的速度：
+t0 = Sys.time()
+dat2 = fread('data3_4.csv', header = TRUE)
+Sys.time() - t0
+
 
 
 
