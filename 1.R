@@ -23,6 +23,17 @@ t0 = Sys.time()
 dat2 = fread('data3_4.csv', header = TRUE)
 Sys.time() - t0
 
+#快速讀寫檔案(4)
+#比較討厭的地方在使用「fread」讀取進來的物件格式是「data.table」，這是一個 新的物件格式。
+class(dat1)
+class(dat2)
+
+#解決這個問題的方式是在使用「fread」的時候多給一個參數：
+t0 = Sys.time()
+dat2 = fread('data3_4.csv', header = TRUE, data.table = FALSE)
+Sys.time() - t0
+
+class(dat2)
 
 
 
