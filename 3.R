@@ -11,3 +11,26 @@ sub_final.data_1 = final.data_1[final.data_1[,1] == levels.PATNUMBER[i],]
 sub_final.data_1[is.na(sub_final.data_1[,'IP']),'IP'] = mean(sub_final.data_1[,'IP'], na.rm = TRUE)
 #這邊你先思考一下，我要如何把這樣的過程擴展到全部的資料上面?
   
+#遺漏值插補(2)
+#那要做所有變項的也不難，只要這樣就能做完了：
+final.data_1 = final.data
+levels.PATNUMBER = final.data_1[,1] %>% factor %>% levels
+n.PATNUMBER = levels.PATNUMBER %>% length
+levels.TESTNAME = colnames(final.data_1)[-c(1:2)]
+n.TESTNAME = levels.TESTNAME %>% length
+
+dat_list = list()
+
+for (i in 1:n.PATNUMBER) {
+  sub_final.data_1 = final.data_1[final.data_1[,1] == levels.PATNUMBER[i],]
+  for (j in 1:n.TESTNAME) {
+    sub_final.data_1[is.na(sub_final.data_1[,levels.TESTNAME[j]]),levels.TESTNAME[j]] = mean(sub_final.data_1[,levels.TESTNAME[j]], na.rm = TRUE)
+  }
+  dat_list[[i]] = sub_final.data_1
+}
+
+final.data_1 = do.call("rbind", dat_list)
+#但你可能會有疑問，這樣插補感覺很不可靠，畢竟病人隨著時間生化值會慢慢變化，我要插補的值應該是選擇找「天數最近的值」作為插補的依據。
+#那這樣再考考你，你覺得應該怎麼做?
+  
+  
