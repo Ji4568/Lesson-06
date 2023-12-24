@@ -44,5 +44,18 @@ dat1 = read.csv('data3_4.csv', header = TRUE, stringsAsFactors = FALSE, fileEnco
 #這樣兩者就完全一樣了
 all.equal(dat1, dat2)
 
+#快速讀寫檔案(6)
+#除了讀取檔案之外，寫出檔案也可以使用「fwrite」函數進行加速：
+#這是使用「write.csv」寫出的速度：
+
+t0 = Sys.time()
+write.csv(dat1, 'data3_4(1).csv', row.names = FALSE, quote = TRUE)
+Sys.time() - t0
+
+#這是使用「fwrite」寫出的速度：
+
+t0 = Sys.time()
+fwrite(dat2, 'data3_4(2).csv', row.names = FALSE, quote = TRUE)
+Sys.time() - t0
 
 
