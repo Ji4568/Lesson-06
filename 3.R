@@ -33,4 +33,28 @@ final.data_1 = do.call("rbind", dat_list)
 #但你可能會有疑問，這樣插補感覺很不可靠，畢竟病人隨著時間生化值會慢慢變化，我要插補的值應該是選擇找「天數最近的值」作為插補的依據。
 #那這樣再考考你，你覺得應該怎麼做?
   
-  
+#遺漏值插補(3)
+#關鍵其實是在sub_final.data_1的處理上，我們簡單點來拆解程式，並先找出不是na的位置在哪：
+final.data_1 = final.data
+
+levels.PATNUMBER = final.data_1[,1] %>% factor %>% levels
+n.PATNUMBER = levels.PATNUMBER %>% length
+levels.TESTNAME = colnames(final.data_1)[-c(1:2)]
+n.TESTNAME = levels.TESTNAME %>% length
+
+dat_list = list()
+
+i = 1
+sub_final.data_1 = final.data_1[final.data_1[,1] == levels.PATNUMBER[i],]
+j = 1
+value_pos = which(!is.na(sub_final.data_1[,levels.TESTNAME[j]]))
+if (length(value_pos)!=0) {
+  k = 1
+  if (is.na(sub_final.data_1[k,levels.TESTNAME[j]])) {
+    impute_seq = which.min(abs(value_pos - k))
+    impute_pos = value_pos[impute_seq]
+    sub_final.data_1[k,levels.TESTNAME[j]] = sub_final.data_1[impute_pos,levels.TESTNAME[j]]
+  }
+}
+#這邊有個小坑，需要先確認value_pos的長度是否為0！
+
