@@ -58,3 +58,31 @@ if (length(value_pos)!=0) {
 }
 #這邊有個小坑，需要先確認value_pos的長度是否為0！
 
+#遺漏值插補(4)
+#要完全所有的事情，只要把剛剛的程式再寫到迴圈內即可：
+final.data_1 = final.data
+levels.PATNUMBER = final.data_1[,1] %>% factor %>% levels
+n.PATNUMBER = levels.PATNUMBER %>% length
+levels.TESTNAME = colnames(final.data_1)[-c(1:2)]
+n.TESTNAME = levels.TESTNAME %>% length
+
+dat_list = list()
+
+for (i in 1:n.PATNUMBER) {
+  sub_final.data_1 = final.data_1[final.data_1[,1] == levels.PATNUMBER[i],]
+  for (j in 1:n.TESTNAME) {
+    value_pos = which(!is.na(sub_final.data_1[,levels.TESTNAME[j]]))
+    if (length(value_pos)!=0) {
+      for (k in 1:nrow(sub_final.data_1)) {
+        if (is.na(sub_final.data_1[k,levels.TESTNAME[j]])) {
+          impute_seq = which.min(abs(value_pos - k))
+          impute_pos = value_pos[impute_seq]
+          sub_final.data_1[k,levels.TESTNAME[j]] = sub_final.data_1[impute_pos,levels.TESTNAME[j]]
+        }
+      }
+    }
+  }
+}
+
+final.data_1 = do.call("rbind", dat_list)
+
