@@ -35,6 +35,14 @@ Sys.time() - t0
 
 class(dat2)
 
+#快速讀寫檔案(5)
+#但現在兩者還不完全一樣，問題出在哪呢?
+all.equal(dat1, dat2)
+
+#原來是使用「read.csv」有另一個參數「stringsAsFactors」，預設是TRUE，但使用「fread」的時候預設卻是FALSE，所以我們再改變一下：
+dat1 = read.csv('data3_4.csv', header = TRUE, stringsAsFactors = FALSE, fileEncoding = 'CP950')
+#這樣兩者就完全一樣了
+all.equal(dat1, dat2)
 
 
 
